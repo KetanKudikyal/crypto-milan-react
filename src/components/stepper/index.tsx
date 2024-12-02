@@ -11,12 +11,14 @@ import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { Transaction } from '@mysten/sui/transactions';
 import { useWallet } from '@suiet/wallet-kit';
 import Big from 'big.js';
+import { OktoContextType, useOkto } from 'okto-sdk-react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import { getUserLocation } from '../../lib/helper';
 import { ATTESTATION_CONTRACT, COIN_CONTRACT, REWARDS_CONTRACT } from '../../utils/constants';
 import Ar from '../Ar';
 const client = new SuiClient({ url: getFullnodeUrl('devnet') });
+
 const steps = [
     {
         label: 'Verify your location',
@@ -37,20 +39,64 @@ const steps = [
 ];
 
 export default function VerticalLinearStepper({
+    event,
     isUserInRange,
 }: {
+    event: any;
     isUserInRange: boolean;
 }) {
     const wallet = useWallet()
     const [tokenAddress, setTokenAddress] = React.useState("")
+    const { executeRawTransaction } = useOkto() as OktoContextType;
     const [activeStep, setActiveStep] = React.useState(0);
     const [showAR, setShowAR] = React.useState(false);
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    const handleRedeem = async () => {
+        toast.loading('Redeeming perks...');
+        const location = await getUserLocation();
+        if (!localStorage.getItem('userUsed')) {
+            await executeRawTransaction({
+                network_name: 'APTOS_TESTNET',
+                transaction: {
+                    transactions: [
+                        {
+                            function:
+                                '0x1f14c842666214863d1dce2d3c82ea9db512b35b98718d00a40e60633bfdf5e5::nft_milan::initialize_collection',
+                            typeArguments: [],
+                            functionArguments: [],
+                        },
+                    ],
+                },
+            });
+            localStorage.setItem('userUsed', 'true');
+        }
+
+        await executeRawTransaction({
+            network_name: 'APTOS_TESTNET',
+            transaction: {
+                transactions: [
+                    {
+                        function:
+                            '0x1f14c842666214863d1dce2d3c82ea9db512b35b98718d00a40e60633bfdf5e5::nft_milan::mint_nft',
+                        typeArguments: [],
+                        functionArguments: [
+                            event.title,
+                            event.description,
+                            location.latitude,
+                            location.longitude,
+                            event.hosts[0].name,
+                            'https://violet-gentle-cow-510.mypinata.cloud/ipfs/QmdFHqPUoLR3BvZDkjwne9dFYXThFYK221yHfaAYc8Zeix',
+                        ],
+                    },
+                ],
+            },
+        }).then(async (result: any) => {
+            toast.success(`${result.orderId} orderId`);
+            toast.success('Perks redeemed successfully');
+        });
     };
 
     const handleReset = () => {

@@ -132,7 +132,10 @@ export default function EventPage() {
                     onClick={validateUserCoordinates}
                 />
 
-                <VerticalLinearStepper isUserInRange={isUserInRange} />
+                <VerticalLinearStepper
+                    event={event}
+                    isUserInRange={isUserInRange}
+                />
             </div>
         </div>
     );
