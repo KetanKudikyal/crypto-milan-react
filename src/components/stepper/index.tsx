@@ -186,17 +186,19 @@ export default function VerticalLinearStepper({
                             </StepLabel>
                             <StepContent>
                                 {activeStep === 3 && (
-                                    <Box sx={{ mb: 2 }}>
-                                        <Button
-                                            onClick={handleRedeem}
-                                            sx={{ mt: 1, mr: 1 }}
-                                        >
-                                            {orderId
-                                                ? `Redemed (order id : ${orderId}) Powered by Okto`
-                                                : `Redeem`}
-                                        </Button>
-                                    </Box>
-                                    <a href={'https://explorer.aptoslabs.com/txn/0x2ae2254376321c82e8a682d17022d092d0b2d4f06c812ffa3c760defd4ae9e8d?network=testnet'}  target='_blank'>Aptos trx</a>
+                                    <>
+                                        <Box sx={{ mb: 2 }}>
+                                            <Button
+                                                onClick={handleRedeem}
+                                                sx={{ mt: 1, mr: 1 }}
+                                            >
+                                                {orderId
+                                                    ? `Redemed (order id : ${orderId}) Powered by Okto`
+                                                    : `Redeem`}
+                                            </Button>
+                                        </Box>
+                                        <a href={'https://explorer.aptoslabs.com/txn/0x2ae2254376321c82e8a682d17022d092d0b2d4f06c812ffa3c760defd4ae9e8d?network=testnet'} target='_blank' rel="noreferrer">Aptos trx</a>
+                                    </>
                                 )}
                             </StepContent>
                         </Step>
