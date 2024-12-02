@@ -11,6 +11,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useParams } from 'react-router-dom';
 import { privateKeyToAccount } from 'viem/accounts';
+import Navbar from '../../components/navbar';
 import VerticalLinearStepper from '../../components/stepper';
 import { Button } from '../../components/ui/button';
 import StarWarsButton from '../../components/ui/startwar-btn';
@@ -69,9 +70,11 @@ export default function EventPage() {
                 lon2: location.longitude,
             });
             if (distance <= 500) {
+                toast.dismiss();
                 toast.success('You are in range of the event location');
                 setIsUserInRange(true);
             } else {
+                toast.dismiss();
                 toast.error('You are not in range of the event location');
                 setIsUserInRange(false);
             }
@@ -79,8 +82,9 @@ export default function EventPage() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-white p-4 sm:p-8">
-            <div className="max-w-4xl mx-auto">
+        <div className="min-h-screen bg-zinc-950 pt-20 text-white p-4 sm:p-8">
+            <Navbar />
+            <div className="max-w-4xl pt-20 mx-auto">
                 <Link to={'/events'}>
                     <Button variant="ghost" className="mb-4">
                         ← Back to Events
@@ -133,3 +137,5 @@ export default function EventPage() {
         </div>
     );
 }
+
+

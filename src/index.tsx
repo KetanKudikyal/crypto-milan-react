@@ -1,12 +1,13 @@
+import '@suiet/wallet-kit/style.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
 import './index.css';
-import HomePage from './pages/HomePage';
-import Events from './pages/Events';
-import Provider from './provider';
+import AdminPage from './pages/admin';
 import EventDetails from './pages/EventDetails';
+import Events from './pages/Events';
+import HomePage from './pages/HomePage';
+import Provider from './provider';
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     {
         path: '/events',
         element: <Events />,
+    },
+    {
+        path: '/admin',
+        element: <AdminPage />,
     },
     {
         path: '/events/:eventId',
