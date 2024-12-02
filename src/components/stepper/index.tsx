@@ -12,6 +12,7 @@ import * as React from 'react';
 import toast from 'react-hot-toast';
 import { privateKeyToAccount } from 'viem/accounts';
 import { getUserLocation } from '../../lib/helper';
+import useGlobalStorage from '../../store';
 import Ar from '../Ar';
 const privateKey =
     '0xe1d4b11589a54870b3df94b0c20bb6dd8b3e1611123b1223f7901041e126b612';
@@ -42,6 +43,7 @@ export default function VerticalLinearStepper({
     isUserInRange: boolean;
 }) {
     const { executeRawTransaction } = useOkto() as OktoContextType;
+    const { setUserActivities } = useGlobalStorage();
     const [activeStep, setActiveStep] = React.useState(0);
     const [showAR, setShowAR] = React.useState(false);
     const [signLink, setSignLink] = React.useState('');
@@ -52,7 +54,7 @@ export default function VerticalLinearStepper({
 
     const handleRedeem = async () => {
         toast.dismiss();
-        toast.loading('Redeeming perks...');
+
         const location = await getUserLocation();
         if (!localStorage.getItem('userUsed')) {
             await executeRawTransaction({
@@ -93,6 +95,7 @@ export default function VerticalLinearStepper({
         }).then(async (result: any) => {
             toast.success(`${result.orderId} orderId`);
             setOrderId(result.orderId);
+            setUserActivities('true');
             toast.success('Perks redeemed successfully');
         });
     };
@@ -173,7 +176,7 @@ export default function VerticalLinearStepper({
                                 {index === 2 && signLink ? (
                                     <a
                                         href={`https://testnet-scan.sign.global/attestation/onchain_evm_80002_${signLink}`}
-                                        target="_blank"
+                                        target="_blank" rel="noreferrer"
                                     >
                                         {step.label}
                                     </a>
