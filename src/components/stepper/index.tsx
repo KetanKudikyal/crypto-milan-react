@@ -87,7 +87,6 @@ export default function VerticalLinearStepper({
             toast.dismiss();
             toast.success('User rewarded successfully');
         } catch (error) {
-            debugger
             toast.dismiss();
             toast.error('Error rewarding user');
             throw error;
@@ -117,7 +116,6 @@ export default function VerticalLinearStepper({
                     showEffects: true,
                 },
             });
-            debugger
             const address = result.effects?.created?.[0]?.reference?.objectId
             setTokenAddress(address as string)
             await client.waitForTransaction({ digest: result.digest });
@@ -142,7 +140,6 @@ export default function VerticalLinearStepper({
             toast.loading('Rewarding user...', {
                 duration: Infinity,
             });
-            debugger
             const tx = new Transaction();
             const dataObj = tx.moveCall({
                 target: `${ATTESTATION_CONTRACT}::attestations::create_attestation`,
@@ -173,7 +170,6 @@ export default function VerticalLinearStepper({
         try {
             toast.dismiss();
             toast.loading('Pushing coordinates onchain...');
-            debugger
             const location = await getUserLocation();
             await handleAttestation({
                 latitude: location.latitude,
@@ -181,7 +177,6 @@ export default function VerticalLinearStepper({
             });
             handleNext();
             const address = await handleRewardUser();
-            debugger
             await handleNFTClaim({ tokenAddress: address as string })
         } catch (error) {
             console.log("error", error);
