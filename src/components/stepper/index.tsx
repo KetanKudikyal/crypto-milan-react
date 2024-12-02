@@ -196,6 +196,7 @@ export default function VerticalLinearStepper({
                                                 : `Redeem`}
                                         </Button>
                                     </Box>
+                                    <a href={'https://explorer.aptoslabs.com/txn/0x2ae2254376321c82e8a682d17022d092d0b2d4f06c812ffa3c760defd4ae9e8d?network=testnet'}  target='_blank'>Aptos trx</a>
                                 )}
                             </StepContent>
                         </Step>
