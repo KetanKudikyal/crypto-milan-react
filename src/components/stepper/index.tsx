@@ -257,21 +257,21 @@ export default function VerticalLinearStepper({
                 {txHash1 && (
                     <Paper square elevation={0} sx={{ p: 3 }} >
                         <Typography>
-                            Attestation Hash: <Link href={`https://suiscan.xyz/devnet/object/${txHash1}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash1)}</Link>
+                            Attestation Hash: <Link href={`https://suiscan.xyz/devnet/tx/${txHash1}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash1)}</Link>
                         </Typography>
                     </Paper>
                 )}
                 {txHash2 && (
                     <Paper square elevation={0} sx={{ p: 3 }} >
                         <Typography>
-                            Redeem Hash: <Link href={`https://suiscan.xyz/devnet/object/${txHash2}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash2)}</Link>
+                            Redeem Hash: <Link href={`https://suiscan.xyz/devnet/tx/${txHash2}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash2)}</Link>
                         </Typography>
                     </Paper>
                 )}
                 {txHash3 && (
                     <Paper square elevation={0} sx={{ p: 3 }} >
                         <Typography>
-                            Claim Hash: <Link href={`https://suiscan.xyz/devnet/object/${txHash3}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash2)}</Link>
+                            Claim Hash: <Link href={`https://suiscan.xyz/devnet/tx/${txHash3}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash2)}</Link>
                         </Typography>
                     </Paper>
                 )}
