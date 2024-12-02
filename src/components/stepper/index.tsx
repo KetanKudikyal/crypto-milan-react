@@ -110,7 +110,7 @@ export default function VerticalLinearStepper({
         handleNext();
     };
 
-    const handleNFTClaim = async ({ tokenAddress }: { tokenAddress: string }) => {
+    const handleNFTClaim = async () => {
         try {
             toast.loading('Claiming NFT...', {
                 duration: Infinity,
@@ -222,8 +222,7 @@ export default function VerticalLinearStepper({
                 longitude: location.longitude,
             });
             handleNext();
-            const address = await handleRewardUser();
-            await handleNFTClaim({ tokenAddress: address as string })
+            await handleRewardUser();
         } catch (error) {
             console.log("error", error);
             toast.dismiss();
@@ -269,7 +268,7 @@ export default function VerticalLinearStepper({
                                     {index === steps.length - 1 && (
                                         <Button
                                             variant="contained"
-                                            onClick={index === steps.length - 1 ? handleNext : handleNext}
+                                            onClick={index === steps.length - 1 ? handleNFTClaim : handleNext}
                                             sx={{ mt: 1, mr: 1 }}
                                         >
                                             {index === steps.length - 1
