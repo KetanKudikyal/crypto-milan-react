@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Step from '@mui/material/Step';
 import StepContent from '@mui/material/StepContent';
@@ -38,6 +39,20 @@ const steps = [
     },
 ];
 
+function truncateString(
+    minLength: number,
+    firstHalf: number,
+    secondHalf: number,
+    input: string
+) {
+    if (input.length > minLength) {
+        const firstPart = input.slice(0, firstHalf);
+        const lastPart = input.slice(-secondHalf);
+        return `${firstPart}...${lastPart}`;
+    }
+    return input;
+}
+
 export default function VerticalLinearStepper({
     event,
     isUserInRange,
@@ -47,6 +62,8 @@ export default function VerticalLinearStepper({
 }) {
     const wallet = useWallet()
     const [tokenAddress, setTokenAddress] = React.useState("")
+    const [txHash1, setTxHash1] = React.useState("")
+    const [txHash2, setTxHash2] = React.useState("")
     const { executeRawTransaction } = useOkto() as OktoContextType;
     const [activeStep, setActiveStep] = React.useState(0);
     const [showAR, setShowAR] = React.useState(false);
@@ -54,54 +71,6 @@ export default function VerticalLinearStepper({
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
-    const handleRedeem = async () => {
-        toast.loading('Redeeming perks...');
-        const location = await getUserLocation();
-        if (!localStorage.getItem('userUsed')) {
-            await executeRawTransaction({
-                network_name: 'APTOS_TESTNET',
-                transaction: {
-                    transactions: [
-                        {
-                            function:
-                                '0x1f14c842666214863d1dce2d3c82ea9db512b35b98718d00a40e60633bfdf5e5::nft_milan::initialize_collection',
-                            typeArguments: [],
-                            functionArguments: [],
-                        },
-                    ],
-                },
-            });
-            localStorage.setItem('userUsed', 'true');
-        }
-
-        await executeRawTransaction({
-            network_name: 'APTOS_TESTNET',
-            transaction: {
-                transactions: [
-                    {
-                        function:
-                            '0x1f14c842666214863d1dce2d3c82ea9db512b35b98718d00a40e60633bfdf5e5::nft_milan::mint_nft',
-                        typeArguments: [],
-                        functionArguments: [
-                            event.title,
-                            event.description,
-                            location.latitude,
-                            location.longitude,
-                            event.hosts[0].name,
-                            'https://violet-gentle-cow-510.mypinata.cloud/ipfs/QmdFHqPUoLR3BvZDkjwne9dFYXThFYK221yHfaAYc8Zeix',
-                        ],
-                    },
-                ],
-            },
-        }).then(async (result: any) => {
-            toast.success(`${result.orderId} orderId`);
-            toast.success('Perks redeemed successfully');
-        });
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
     const handleARInvokation = () => {
         setShowAR(true);
     };
@@ -164,6 +133,7 @@ export default function VerticalLinearStepper({
             });
             const address = result.effects?.created?.[0]?.reference?.objectId
             setTokenAddress(address as string)
+            setTxHash2(result.digest)
             await client.waitForTransaction({ digest: result.digest });
             toast.dismiss();
             toast.success('User rewarded successfully');
@@ -201,6 +171,7 @@ export default function VerticalLinearStepper({
             const result = await wallet.signAndExecuteTransaction({
                 transaction: tx,
             });
+            setTxHash1(result.digest)
             await client.waitForTransaction({ digest: result.digest });
             toast.dismiss();
             toast.success('User rewarded successfully');
@@ -281,6 +252,20 @@ export default function VerticalLinearStepper({
                         </Step>
                     ))}
                 </Stepper>
+                {txHash1 && (
+                    <Paper square elevation={0} sx={{ p: 3 }} >
+                        <Typography>
+                            Attestation Hash: <Link href={`https://suiscan.xyz/devnet/object/${txHash1}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash1)}</Link>
+                        </Typography>
+                    </Paper>
+                )}
+                {txHash2 && (
+                    <Paper square elevation={0} sx={{ p: 3 }} >
+                        <Typography>
+                            Redeem Hash: <Link href={`https://suiscan.xyz/devnet/object/${txHash2}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash2)}</Link>
+                        </Typography>
+                    </Paper>
+                )}
                 {activeStep === steps.length && (
                     <Paper square elevation={0} sx={{ p: 3 }} >
                         <Typography>
