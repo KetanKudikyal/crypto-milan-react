@@ -64,6 +64,7 @@ export default function VerticalLinearStepper({
     const [tokenAddress, setTokenAddress] = React.useState("")
     const [txHash1, setTxHash1] = React.useState("")
     const [txHash2, setTxHash2] = React.useState("")
+    const [txHash3, setTxHash3] = React.useState("")
     const { executeRawTransaction } = useOkto() as OktoContextType;
     const [activeStep, setActiveStep] = React.useState(0);
     const [showAR, setShowAR] = React.useState(false);
@@ -98,12 +99,13 @@ export default function VerticalLinearStepper({
             const result = await wallet.signAndExecuteTransaction({
                 transaction: tx,
             });
+            setTxHash3(result.digest)
             await client.waitForTransaction({ digest: result.digest });
             toast.dismiss();
-            toast.success('User rewarded successfully');
+            toast.success('Claimed NFT successfully');
         } catch (error) {
             toast.dismiss();
-            toast.error('Error rewarding user');
+            toast.error('Error claiming NFT');
             throw error;
         }
     }
@@ -174,7 +176,7 @@ export default function VerticalLinearStepper({
             setTxHash1(result.digest)
             await client.waitForTransaction({ digest: result.digest });
             toast.dismiss();
-            toast.success('User rewarded successfully');
+            toast.success('Attested successfully');
         } catch (error) {
             console.log("error", error);
             toast.dismiss();
@@ -263,6 +265,13 @@ export default function VerticalLinearStepper({
                     <Paper square elevation={0} sx={{ p: 3 }} >
                         <Typography>
                             Redeem Hash: <Link href={`https://suiscan.xyz/devnet/object/${txHash2}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash2)}</Link>
+                        </Typography>
+                    </Paper>
+                )}
+                {txHash3 && (
+                    <Paper square elevation={0} sx={{ p: 3 }} >
+                        <Typography>
+                            Claim Hash: <Link href={`https://suiscan.xyz/devnet/object/${txHash3}`} target="_blank" rel="noopener noreferrer">{truncateString(10, 4, 4, txHash2)}</Link>
                         </Typography>
                     </Paper>
                 )}
